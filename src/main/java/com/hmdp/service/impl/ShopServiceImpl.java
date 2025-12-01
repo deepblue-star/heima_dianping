@@ -147,7 +147,7 @@ public class ShopServiceImpl extends ServiceImpl<ShopMapper, Shop> implements IS
     @Transactional
     @Override
     public Result saveShop(Shop shop) {
-        // 写入数据库
+        // 新增记录到DB
         save(shop);
         // 添加到布隆过滤器
         shopBloomFilter.add(shop.getId().toString());
