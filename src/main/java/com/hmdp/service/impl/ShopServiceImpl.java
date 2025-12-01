@@ -169,7 +169,6 @@ public class ShopServiceImpl extends ServiceImpl<ShopMapper, Shop> implements IS
 
             // 构建查询条件，只查询ID字段
             QueryWrapper<Shop> queryWrapper = new QueryWrapper<>();
-//            queryWrapper.select(Shop::getId);
             queryWrapper.select("id");
 
             // 执行分页查询
