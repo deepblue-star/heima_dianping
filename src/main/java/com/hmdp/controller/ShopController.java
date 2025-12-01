@@ -44,10 +44,7 @@ public class ShopController {
      */
     @PostMapping
     public Result saveShop(@RequestBody Shop shop) {
-        // 写入数据库
-        shopService.save(shop);
-        // 返回店铺id
-        return Result.ok(shop.getId());
+        return shopService.saveShop(shop);
     }
 
     /**
@@ -96,14 +93,5 @@ public class ShopController {
                 .page(new Page<>(current, SystemConstants.MAX_PAGE_SIZE));
         // 返回数据
         return Result.ok(page.getRecords());
-    }
-
-
-    /**
-     * 后台任务，将所有店铺id加载到布隆过滤器中
-     */
-    @Scheduled(fixedDelay = Long.MAX_VALUE) // 仅启动时执行一次
-    public void loadAllShopIdToBloomFilter() {
-        shopService.loadAllShopIdToBloomFilter();
     }
 }

@@ -18,5 +18,7 @@ public interface IShopService extends IService<Shop> {
 
     Result update(Shop shop);
 
+    Result saveShop(Shop shop);
+
     void loadAllShopIdToBloomFilter();
 }
