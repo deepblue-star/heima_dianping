@@ -100,7 +100,6 @@ public class ShopServiceImpl extends ServiceImpl<ShopMapper, Shop> implements IS
 
             // 7. 成功，则查DB
             Shop shop = getById(id);
-            log.debug("查DB");
             if (shop == null) {
                 return Result.fail("店铺不存在！");
             }

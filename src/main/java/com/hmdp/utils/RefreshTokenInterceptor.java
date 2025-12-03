@@ -36,6 +36,8 @@ public class RefreshTokenInterceptor implements HandlerInterceptor {
         Map<Object, Object> userMap = stringRedisTemplate.opsForHash().entries(key);
         // 3. 判断用户是否存在
         if (userMap.isEmpty()) {
+            // 不存在，有可能是token过期，因此需要删除ThreadLocal里的用户
+            UserHolder.removeUser();
             return true;
         }
 
