@@ -13,10 +13,13 @@ public class RedissonConfig {
     @Value("${spring.redis.host}")
     private String REDIS_IP_ADDRESS;
 
+    @Value("${spring.redis.port}")
+    private String REDIS_PORT;
+
     @Bean
     public RedissonClient redissonClient() {
         Config config = new Config();
-        config.useSingleServer().setAddress(REDIS_IP_ADDRESS);
+        config.useSingleServer().setAddress("redis://" + REDIS_IP_ADDRESS + ":" + REDIS_PORT);
         return Redisson.create(config);
     }
 }
