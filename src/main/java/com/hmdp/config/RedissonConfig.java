@@ -11,7 +11,7 @@ import org.springframework.context.annotation.Configuration;
 public class RedissonConfig {
 
     @Value("${spring.redis.host}")
-    private final String REDIS_IP_ADDRESS;
+    private String REDIS_IP_ADDRESS;
 
     @Bean
     public RedissonClient redissonClient() {
