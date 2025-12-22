@@ -17,9 +17,12 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZoneOffset;
+import java.time.ZonedDateTime;
 import java.util.List;
 
-import static com.hmdp.utils.RedisConstants.SECKILL_STOCK_KEY;
+import static com.hmdp.utils.RedisConstants.*;
 
 /**
  * <p>
@@ -60,5 +63,15 @@ public class VoucherServiceImpl extends ServiceImpl<VoucherMapper, Voucher> impl
         seckillVoucherService.save(seckillVoucher);
         // 保存秒杀库存到Redis中
         stringRedisTemplate.opsForValue().set(SECKILL_STOCK_KEY + voucher.getId(), voucher.getStock().toString());
+        // 认为LocalDateTime的时间是中国时区，转换为UTC时间戳
+        ZoneId chinaZone = ZoneId.of("Asia/Shanghai");
+        ZonedDateTime beginZonedTime = voucher.getBeginTime().atZone(chinaZone);
+        ZonedDateTime endZonedTime = voucher.getEndTime().atZone(chinaZone);
+        // 保存优惠券起始时间戳到Redis中
+        stringRedisTemplate.opsForValue().set(SECKILL_BEGIN_TIME_KEY + voucher.getId(),
+                String.valueOf(beginZonedTime.toEpochSecond()));
+        // 保存优惠券失效时间戳到Redis中
+        stringRedisTemplate.opsForValue().set(SECKILL_END_TIME_KEY + voucher.getId(),
+                String.valueOf(endZonedTime.toEpochSecond()));
     }
 }

@@ -142,7 +142,6 @@ public class VoucherOrderServiceImpl extends ServiceImpl<VoucherOrderMapper, Vou
 
     @Override
     public Result seckillVoucherAsync(Long voucherId) {
-        // todo: 判断秒杀时间
         // 1. 执行lua脚本
         Long userId = UserHolder.getUser().getId();
         Long result = stringRedisTemplate.execute(SECKILL_SCRIPT,
@@ -154,7 +153,8 @@ public class VoucherOrderServiceImpl extends ServiceImpl<VoucherOrderMapper, Vou
         int r = result.intValue();
         // 2.1. 不为0，说明没有购买资格
         if (r != 0) {
-            return Result.fail(r == 1 ? "库存不足" : "不能重复下单");
+            log.debug("r: " + r);
+            return Result.fail(r == 1 ? "库存不足" : r == 2 ? "不能重复下单" : "不在秒杀时间内");
         }
 
         // 2.2. 为0，有购买资格，把下单信息存到阻塞队列

@@ -15,8 +15,27 @@ local userId = ARGV[2]
 local stockKey = 'seckill:stock:' .. voucherId
 -- 2.2. 订单key
 local orderKey = 'seckill:order:' .. voucherId
+-- 2.3. 秒杀开始时间key
+local beginTimeKey = "seckill:beginTime:" .. voucherId
+-- 2.4. 秒杀结束时间key
+local endTimeKey = "seckill:endTime:" .. voucherId
+
+
 
 -- 3. 脚本业务
+-- 3.0. 判断当前时间是否在秒杀时间范围内，使用utc时间戳对比
+-- 获取当前时间
+local currentTime = tonumber(redis.call('time')[1])
+-- 获取秒杀开始时间
+local beginTime = tonumber(redis.call('get', beginTimeKey))
+-- 获取秒杀结束时间
+local endTime = tonumber(redis.call('get', endTimeKey))
+
+if (currentTime < beginTime or currentTime > endTime) then
+    -- 不在秒杀时间范围内，返回3
+    return 3
+end
+
 -- 3.1. 判断库存是否充足 get stockKey
 if (tonumber(redis.call('get', stockKey)) <= 0) then
     -- 3.2. 库存不足，返回1
